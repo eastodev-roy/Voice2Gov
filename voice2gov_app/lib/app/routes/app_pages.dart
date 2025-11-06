@@ -20,19 +20,15 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SPLASHSCREEN;
+  static const INITIAL = Routes.HOME;
 
   static final routes = [
     GetPage(
       name: _Paths.SPLASHSCREEN,
-      page: () => const SplashscreenView(),
+      page: () => const SplashScreen(),
       binding: SplashscreenBinding(),
     ),
-    GetPage(
-      name: _Paths.HOME,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
-    ),
+    GetPage(name: _Paths.HOME, page: () => HomeView(), binding: HomeBinding()),
     GetPage(
       name: _Paths.LOGIN,
       page: () => const LoginView(),
@@ -45,7 +41,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SIGNUP,
-      page: () => const SignupView(),
+      page: () => const SignupScreen(),
       binding: SignupBinding(),
     ),
     GetPage(

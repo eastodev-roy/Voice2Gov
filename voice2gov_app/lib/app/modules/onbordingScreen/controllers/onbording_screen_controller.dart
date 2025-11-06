@@ -1,6 +1,6 @@
-// lib/app/modules/onboarding/onboarding_controller.dart
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voice2gov_app/app/modules/auth/registration/views/registration_view.dart';
 
 class OnbordingScreenController extends GetxController {
   var currentPage = 0.obs;
@@ -19,6 +19,6 @@ class OnbordingScreenController extends GetxController {
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasSeenOnboarding', true);
-    Get.offAllNamed('/home');
+    Get.off(() => RegistrationView());
   }
 }
