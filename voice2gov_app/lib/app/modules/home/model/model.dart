@@ -1,12 +1,7 @@
-// lib/app/modules/home/model/service_model.dart
 class ServiceModel {
   final String title;
-  final String icon;
+  // Local asset path
   final List<String> keywords;
 
-  ServiceModel({
-    required this.title,
-    required this.icon,
-    required this.keywords,
-  });
+  ServiceModel({required this.title, required this.keywords});
 }

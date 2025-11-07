@@ -10,6 +10,9 @@ abstract class Routes {
   static const FORGETPASSWORD = _Paths.FORGETPASSWORD;
   static const SPLASHSCREEN = _Paths.SPLASHSCREEN;
   static const ONBORDING_SCREEN = _Paths.ONBORDING_SCREEN;
+  static const DESHBOARD = _Paths.DESHBOARD;
+  static const SETTING = _Paths.SETTING;
+  static const NOTIFICATION = _Paths.NOTIFICATION;
 }
 
 abstract class _Paths {
@@ -21,4 +24,7 @@ abstract class _Paths {
   static const FORGETPASSWORD = '/forgetpassword';
   static const SPLASHSCREEN = '/splashscreen';
   static const ONBORDING_SCREEN = '/onbording-screen';
+  static const DESHBOARD = '/deshboard';
+  static const SETTING = '/setting';
+  static const NOTIFICATION = '/notification';
 }

@@ -26,39 +26,35 @@ class HomeController extends GetxController {
   // === Repository ===
   final HomeRepository _repository = HomeRepository();
 
-  // === Services ===
+  // === Static Services (Local Assets) ===
   final List<ServiceModel> services = [
-  ServiceModel(
-    title: "বিদ্যুৎ",
-    icon: "https://img.icons8.com/fluency/48/electricity.png",
-    keywords: ["বিদ্যুৎ", "বিল", "লাইট", "বাতি"],
-  ),
-  ServiceModel(
-    title: "বান",
-    icon: "https://img.icons8.com/fluency/48/water.png",
-    keywords: ["বান", "পানি", "জল", "নদী"],
-  ),
-  ServiceModel(
-    title: "কৃষি",
-    icon: "https://img.icons8.com/fluency/48/agriculture.png",
-    keywords: ["কৃষি", "ফসল", "ক্ষেত", "চাষ"],
-  ),
-  ServiceModel(
-    title: "কাপন",
-    icon: "https://img.icons8.com/fluency/48/target.png",
-    keywords: ["কাপন", "টার্গেট", "লক্ষ্য"],
-  ),
-  ServiceModel(
-    title: "স্বাস্থ্য",
-    icon: "https://img.icons8.com/fluency/48/health.png",
-    keywords: ["স্বাস্থ্য", "ডাক্তার", "হাসপাতাল", "ঔষধ"],
-  ),
-  ServiceModel(
-    title: "শিক্ষা",
-    icon: "https://img.icons8.com/fluency/48/education.png",
-    keywords: ["শিক্ষা", "স্কুল", "কলেজ", "পড়াশোনা"],
-  ),
-];
+    ServiceModel(
+      title: "জেলা প্রশাসনের সেবাসমূহ",
+
+      keywords: ["জেলা", "প্রশাসন", "সেবা", "ডিসি"],
+    ),
+    ServiceModel(
+      title: "শিক্ষা সম্পর্কিত",
+
+      keywords: ["শিক্ষা", "স্কুল", "কলেজ", "পড়াশোনা"],
+    ),
+    ServiceModel(
+      title: "কৃষি, মৎস্য ও প্রাণিসম্পদ",
+
+      keywords: ["কৃষি", "মৎস্য", "প্রাণি", "ফসল"],
+    ),
+    ServiceModel(title: "ডেসকো", keywords: ["ডেসকো", "বিদ্যুৎ", "বিল", "লাইট"]),
+    ServiceModel(
+      title: "স্বাস্থ্য",
+
+      keywords: ["স্বাস্থ্য", "ডাক্তার", "হাসপাতাল", "ঔষধ"],
+    ),
+    ServiceModel(
+      title: "বিদেশগামী সার্টিফিকেট",
+
+      keywords: ["বিদেশ", "সার্টিফিকেট", "সত্যায়ন", "পাসপোর্ট"],
+    ),
+  ];
 
   final RxList<ServiceModel> filteredServices = <ServiceModel>[].obs;
 
@@ -78,7 +74,8 @@ class HomeController extends GetxController {
   // ─── Initialize Speech ───
   Future<void> _initSpeech() async {
     isSpeechAvailable.value = await _speechToText.initialize(
-      onError: (error) => Get.snackbar("ত্রুটি", "স্পিচ সার্ভিসে সমস্যা: ${error.errorMsg}"),
+      onError: (error) =>
+          Get.snackbar("ত্রুটি", "স্পিচ সার্ভিসে সমস্যা: ${error.errorMsg}"),
       onStatus: (status) => print('Speech status: $status'),
     );
   }
@@ -128,7 +125,9 @@ class HomeController extends GetxController {
   // ─── Volume Simulation ───
   void _startVolumeSimulation() {
     _volumeSimTimer?.cancel();
-    _volumeSimTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    _volumeSimTimer = Timer.periodic(const Duration(milliseconds: 100), (
+      timer,
+    ) {
       if (!isListening.value) {
         timer.cancel();
         volumeLevel.value = 0.0;
@@ -147,15 +146,18 @@ class HomeController extends GetxController {
       return;
     }
     final lowerQuery = query.toLowerCase();
-    final matches = services.where((s) =>
-        s.title.toLowerCase().contains(lowerQuery) ||
-        s.keywords.any((k) => lowerQuery.contains(k.toLowerCase())) ||
-        s.keywords.any((k) => k.toLowerCase().contains(lowerQuery))
-    ).toList();
+    final matches = services
+        .where(
+          (s) =>
+              s.title.toLowerCase().contains(lowerQuery) ||
+              s.keywords.any((k) => lowerQuery.contains(k.toLowerCase())) ||
+              s.keywords.any((k) => k.toLowerCase().contains(lowerQuery)),
+        )
+        .toList();
     filteredServices.assignAll(matches);
   }
 
-  // ─── Final Result: Match + Send ───
+  // ─── Final Result: Match + Send to Backend ───
   void _onFinalResult(String text) async {
     if (text.trim().isEmpty) return;
 
@@ -169,7 +171,8 @@ class HomeController extends GetxController {
         colorText: Colors.white,
       );
     }
-    await _sendToBackend(text);
+
+    await _sendToBackend(text); // Sends to your API
   }
 
   ServiceModel? _findBestService(String text) {
@@ -177,7 +180,9 @@ class HomeController extends GetxController {
     ServiceModel? best;
     int max = 0;
     for (final s in services) {
-      int count = s.keywords.where((k) => text.contains(k.toLowerCase())).length;
+      int count = s.keywords
+          .where((k) => text.contains(k.toLowerCase()))
+          .length;
       if (count > max) {
         max = count;
         best = s;
@@ -186,12 +191,17 @@ class HomeController extends GetxController {
     return max > 0 ? best : null;
   }
 
-  // ─── Send to Backend ───
+  // ─── Send to Backend[](http://localhost:3000/api/complaints) ───
   Future<void> _sendToBackend(String text) async {
     try {
       final response = await _repository.sendVoiceText(text);
-      if (response.statusCode == 200) {
-        Get.snackbar("সফল", "অভিযোগ পাঠানো হয়েছে!", backgroundColor: Colors.green, colorText: Colors.white);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar(
+          "সফল",
+          "আপনার অভিযোগ জমা হয়েছে!",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
       } else {
         Get.snackbar("ব্যর্থ", "সার্ভারে সমস্যা: ${response.statusCode}");
       }

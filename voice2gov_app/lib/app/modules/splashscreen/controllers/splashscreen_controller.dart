@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:voice2gov_app/app/modules/onbordingScreen/views/onbording_screen_view.dart';
+import 'package:voice2gov_app/app/modules/home/views/home_view.dart';
 
 class SplashscreenController extends GetxController {
   @override
@@ -10,6 +10,6 @@ class SplashscreenController extends GetxController {
 
   void _navigateToHome() async {
     await Future.delayed(Duration(milliseconds: 3500));
-    Get.off(() => OnbordingScreenView());
+    Get.off(() => HomeView());
   }
 }
