@@ -2,15 +2,15 @@ import 'package:get/get.dart';
 
 class HomeRepository extends GetConnect {
   // Replace with your real backend URL
-  static const String _baseUrl = 'https://your-api.com';
+  static const String _baseUrl = 'http://localhost:3000';
 
   Future<Response> sendVoiceText(String text) async {
     return await post(
-      '$_baseUrl/api/voice-complaint',
+      '$_baseUrl/api/complaints',
       {
-        'text': text,
-        'language': 'bn',
-        'timestamp': DateTime.now().toIso8601String(),
+        'reporttext': text,
+        // 'language': 'bn',
+        // 'timestamp': DateTime.now().toIso8601String(),
       },
       headers: {'Content-Type': 'application/json'},
     );
